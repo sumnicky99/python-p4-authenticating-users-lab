@@ -1,13 +1,18 @@
+# models.py
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy_serializer import SerializerMixin
 
+# Set naming convention for SQLAlchemy metadata
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 
+# Initialize SQLAlchemy with custom metadata
 db = SQLAlchemy(metadata=metadata)
 
+# Define Article model
 class Article(db.Model, SerializerMixin):
     __tablename__ = 'articles'
 
@@ -24,6 +29,7 @@ class Article(db.Model, SerializerMixin):
     def __repr__(self):
         return f'Article {self.id} by {self.author}'
 
+# Define User model
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
@@ -34,3 +40,11 @@ class User(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f'User {self.username}, ID {self.id}'
+
+    # Method to serialize User object to dictionary
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            # Add any other fields you want to serialize
+        }
